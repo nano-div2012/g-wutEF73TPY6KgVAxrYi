@@ -1,11 +1,106 @@
 <!DOCTYPE html>
-<html>
+<html lang="id">
 <head>
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
-    <meta http-equiv="Refresh" content="0; url='https://example.com/'" />
-    <script>window.location.replace("https://example.com/");</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BLOXBID - MABAR</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:Arial,sans-serif}
+body{background:#0a0a0a;color:#fff}
+.top{background:#111;padding:14px 16px;display:flex;justify-content:space-between;align-items:center}
+.top b{font-size:22px}
+.top span{background:#22c55e;color:#000;padding:5px 10px;border-radius:20px;font-size:12px;font-weight:900}
+.player{background:#1a1a1a;margin:0 14px 10px;border-radius:14px;padding:12px;display:flex;gap:12px;align-items:center}
+.pp{width:48px;height:48px;border-radius:50%;background:#2563eb;display:flex;align-items:center;justify-content:center;font-size:22px;border:2px solid #22c55e}
+.pp-owner{background:#facc15;border-color:#facc15}
+.info{flex:1}.info b{font-size:17px}.info small{color:#aaa}
+.btn{border:0;padding:10px 12px;border-radius:10px;font-weight:900;font-size:13px}
+.btn-ganti{background:#fff;color:#000}
+.btn-teman{background:#22c55e;color:#000}
+.btn-mabar{background:#facc15;color:#000;width:100%;padding:14px;font-size:16px;margin:0 14px;width:calc(100% - 28px)}
+.editbox{display:none;margin:0 14px 10px;background:#222;padding:12px;border-radius:14px}
+.editbox input{width:100%;padding:12px;border-radius:10px;border:0}
+.editbox button{width:100%;background:#22c55e;color:#000;font-weight:900;padding:12px;border:0;border-radius:10px;margin-top:8px}
+.tabs{display:flex;gap:10px;margin:14px}
+.tabs button{flex:1;padding:12px;border-radius:12px;border:0;font-weight:900}
+.on{background:#fff;color:#000}.off{background:#222;color:#aaa}
+.room{background:#1a1a1a;margin:0 14px 10px;border-radius:14px;padding:14px;border:2px solid #333}
+.room-owner{border-color:#facc15}
+.chat{background:#1a1a1a;margin:14px;border-radius:16px;padding:12px}
+.msg{background:#222;padding:10px;border-radius:10px;margin-bottom:8px}
+.chat input{width:100%;padding:12px;border-radius:10px;border:0;margin-top:8px}
+</style>
 </head>
-<body style="margin:0;padding:0;background-color:#ffffff;display:flex;justify-content:center;align-items:center;height:100vh;font-family:sans-serif;">
-    Redirecting...
+<body>
+<div class="top"><b>🔥 BLOXBID</b><span>🟢 LOBBY ONLINE</span></div>
+
+<!-- LU DI LOBBY -->
+<div class="player" style="border:2px solid #22c55e;margin-top:14px">
+<div class="pp" id="myPP">🧱</div>
+<div class="info"><b id="myNama">Player1234</b><br><small id="myRole">Kamu • Belum Ganti Nama</small></div>
+<button class="btn btn-ganti" onclick="bukaEdit()">✏️ GANTI NAMA</button>
+</div>
+<div class="editbox" id="editBox"><input id="inputNama" placeholder="Nama baru lu... Yang pertama ganti dapet ✔️!"><button onclick="simpanNama()">✅ SIMPAN</button></div>
+
+<!-- TOMBOL MABAR -->
+<button class="btn btn-mabar" onclick="showTab('mabar',document.querySelectorAll('.tabs button')[1])">▶️ GAS MABAR SEKARANG!</button>
+
+<div class="tabs">
+<button class="on" onclick="showTab('lobby',this)">👥 LOBBY</button>
+<button class="off" onclick="showTab('mabar',this)">🎮 MABAR</button>
+<button class="off" onclick="showTab('chat',this)">💬 CHAT</button>
+<button class="off" onclick="showTab('gratis',this)">🎁 GRATIS</button>
+</div>
+
+<div id="tab-lobby">
+<div class="player"><div class="pp" style="background:#333">😎</div><div class="info"><b>Bocil_123</b><br><small>Pemain • Di Lobby</small></div><button class="btn btn-teman" onclick="alert('Ditambah jadi temen!')">+ TEMAN</button></div>
+</div>
+
+<!-- TAB MABAR -->
+<div id="tab-mabar" style="display:none">
+<div style="padding:0 14px 10px"><b>🎮 ROOM MABAR</b><br><small style="color:#aaa">Bikin room / join room temen lu</small></div>
+<div class="room room-owner">
+<b>👑 Room Bid abid - MABAR SANTAI</b><br><small>🟢 3/6 orang • Mode: Bebas</small><br>
+<div style="margin-top:8px">👑 Bid abid ✔️ | 🧱 Bocil_123 | 😎 Temen Lu</div>
+<button class="btn btn-teman" style="margin-top:10px;width:100%;padding:12px" onclick="joinRoom('Room Bid abid')">JOIN ROOM INI</button>
+</div>
+<div class="room">
+<b>🔥 Room Mabar Bocil</b><br><small>🟢 2/6 orang • Mode: Perang Baju</small><br>
+<div style="margin-top:8px">😎 Bocil_123 | 🧱 Player999</div>
+<button class="btn" style="margin-top:10px;width:100%;padding:12px;background:#fff;color:#000" onclick="joinRoom('Room Mabar Bocil')">JOIN ROOM INI</button>
+</div>
+<div style="margin:14px"><input id="namaRoom" placeholder="Nama room lu... contoh: Room Mabar Bid" style="width:100%;padding:12px;border-radius:10px;border:0"><button class="btn btn-mabar" style="margin-top:8px" onclick="buatRoom()">+ BIKIN ROOM BARU</button></div>
+<div id="roomSaya" style="display:none;margin:0 14px 10px;background:#facc15;color:#000;border-radius:14px;padding:14px"><b>🎮 LU LAGI DI ROOM: <span id="namaRoomSaya"></span></b><br><small id="isiRoom">Kamu + 0 temen</small><br><button style="background:#000;color:#fff;border:0;padding:12px;border-radius:10px;font-weight:900;width:100%;margin-top:10px" onclick="mulaiGame()">🚀 MULAI MABAR SEKARANG!</button></div>
+</div>
+
+<div id="tab-chat" style="display:none"><div class="chat"><div id="list"></div><input id="inp" placeholder="Ketik chat..."><button class="btn btn-teman" style="width:100%;margin-top:8px;padding:12px" onclick="kirim()">KIRIM</button></div></div>
+<div id="tab-gratis" style="display:none"><div class="player"><div class="pp">👕</div><div class="info"><b>Hoodie Hitam Oversize</b><br><small>GRATIS</small></div><button class="btn btn-teman" onclick="this.innerText='DIAMBIL ✅'">AMBIL</button></div></div>
+
+<script>
+let nama = localStorage.getItem('bloxbid_nama') || 'Player' + Math.floor(Math.random()*9000+1000);
+let isOwner = localStorage.getItem('bloxbid_is_owner') === '1';
+let ownerSudahAda = localStorage.getItem('bloxbid_owner_claimed');
+let diRoom = '';
+function render(){
+  let el=document.getElementById('myNama'), role=document.getElementById('myRole'), pp=document.getElementById('myPP');
+  if(isOwner){ el.innerHTML=nama+' 👑 <span style="color:#1d9bf0">✔️</span>'; role.innerText='Kamu • PERTAMA GANTI NAMA • OWNER 🟢'; pp.innerText='👑'; pp.style.background='#facc15'; }
+  else { el.innerText=nama; role.innerText= localStorage.getItem('bloxbid_nama') ? 'Kamu • Pemain • Di Lobby 🟢' : 'Kamu • Belum Ganti Nama'; pp.innerText='🧱'; }
+  document.getElementById('list').innerHTML='<div class="msg"><b>'+nama+(isOwner?' 👑✔️':'')+':</b> GAS MABAR WOE!</div>';
+}
+function bukaEdit(){ let b=document.getElementById('editBox'); b.style.display=b.style.display==='block'?'none':'block'; }
+function simpanNama(){
+  let n=document.getElementById('inputNama').value.trim(); if(!n){alert('Isi nama dulu!');return;}
+  nama=n; localStorage.setItem('bloxbid_nama',n);
+  if(!ownerSudahAda && !isOwner){ isOwner=true; localStorage.setItem('bloxbid_is_owner','1'); localStorage.setItem('bloxbid_owner_claimed','1'); alert('SELAMAT! LU YANG PERTAMA GANTI NAMA! LU JADI OWNER 👑✔️!'); }
+  else alert('Nama lu sekarang: '+n);
+  document.getElementById('editBox').style.display='none'; render();
+}
+function showTab(p,btn){ document.querySelectorAll('.tabs button').forEach(b=>b.className='off'); btn.className='on'; document.getElementById('tab-lobby').style.display=p==='lobby'?'block':'none'; document.getElementById('tab-mabar').style.display=p==='mabar'?'block':'none'; document.getElementById('tab-chat').style.display=p==='chat'?'block':'none'; document.getElementById('tab-gratis').style.display=p==='gratis'?'block':'none'; }
+function joinRoom(r){ diRoom=r; document.getElementById('roomSaya').style.display='block'; document.getElementById('namaRoomSaya').innerText=r; document.getElementById('isiRoom').innerText=nama+' + Bocil_123 + Temen Lu lagi di room ini'; alert('LU MASUK '+r+'! Gas mabar!'); }
+function buatRoom(){ let n=document.getElementById('namaRoom').value.trim() || 'Room Mabar '+nama; diRoom=n; document.getElementById('roomSaya').style.display='block'; document.getElementById('namaRoomSaya').innerText=n; document.getElementById('isiRoom').innerText=nama+' (Host) • Nunggu temen join...'; alert('Room lu udah jadi: '+n+'! Suruh temen lu join!'); }
+function mulaiGame(){ if(!diRoom){alert('Join room dulu!');return;} alert('🚀 GAS! MABAR DIMULAI DI '+diRoom+'! Lu + temen lu lagi main sekarang!'); }
+function kirim(){ let t=document.getElementById('inp').value; if(!t) return; document.getElementById('list').innerHTML+='<div class="msg"><b>'+nama+(isOwner?' 👑✔️':'')+':</b> '+t+'</div>'; document.getElementById('inp').value=''; }
+render();
+</script>
 </body>
 </html>
